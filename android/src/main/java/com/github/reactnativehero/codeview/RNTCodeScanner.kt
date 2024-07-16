@@ -9,8 +9,8 @@ import com.github.herokotlin.code.CodeScanner
 class RNTCodeScanner(reactContext: ThemedReactContext) : CodeScanner(reactContext), LifecycleEventListener {
 
     private var isStarted = false
-
     private var isResuming = false
+    private var isDestroyed = false
 
     private val frameCallback = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
@@ -31,9 +31,13 @@ class RNTCodeScanner(reactContext: ThemedReactContext) : CodeScanner(reactContex
     }
 
     fun destroy() {
+        if (isDestroyed) {
+            return
+        }
         stop()
         (context as ThemedReactContext).removeLifecycleEventListener(this)
         Choreographer.getInstance().removeFrameCallback(frameCallback)
+        isDestroyed = true
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

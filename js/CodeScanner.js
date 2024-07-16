@@ -1,19 +1,46 @@
 import React, {
   PureComponent,
+  createRef,
 } from 'react'
 
-import {
+import ReactNative, {
+  UIManager,
   requireNativeComponent,
+  NativeModules,
+  Platform,
 } from 'react-native'
 
 import PropTypes from 'prop-types'
 
+const { RNTCodeScannerManager } = NativeModules
+
+const isIOS = Platform.OS === 'ios'
+
 class CodeScanner extends PureComponent {
+
+  scannerRef = createRef()
 
   static propTypes = {
     title: PropTypes.string.isRequired,
     style: PropTypes.any,
     onScanSuccess: PropTypes.func,
+  }
+
+  componentWillUnmount() {
+    if (isIOS) {
+      RNTCodeScannerManager.destroy(this.getNativeNode())
+    }
+    else {
+      UIManager.dispatchViewManagerCommand(
+        this.getNativeNode(),
+        UIManager.RNTCodeScanner.Commands.destroy,
+        []
+      )
+    }
+  }
+
+  getNativeNode() {
+    return ReactNative.findNodeHandle(this.scannerRef.current);
   }
 
   handleScanSuccess = event => {
@@ -26,6 +53,7 @@ class CodeScanner extends PureComponent {
   render() {
     return (
       <RNTCodeScanner
+        ref={this.scannerRef}
         {...this.props}
         onScanSuccess={this.handleScanSuccess}
       />
@@ -36,4 +64,4 @@ class CodeScanner extends PureComponent {
 
 const RNTCodeScanner = requireNativeComponent('RNTCodeScanner', CodeScanner)
 
-export default CodeScanner
+export default RNTCodeScanner
