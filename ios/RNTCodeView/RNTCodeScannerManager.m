@@ -1,3 +1,4 @@
+#import <React/RCTUIManager.h>
 
 #import "RNTCodeScannerManager.h"
 #import "RNTCodeScanner.h"
@@ -16,5 +17,12 @@ RCT_CUSTOM_VIEW_PROPERTY(title, NSString, RNTCodeScanner) {
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onScanSuccess, RCTBubblingEventBlock);
+
+RCT_EXPORT_METHOD(destroy:(nonnull NSNumber *)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        RNTCodeScanner *view = (RNTCodeScanner *)viewRegistry[reactTag];
+        [view.scanner destroy];
+    }];
+}
 
 @end

@@ -30,11 +30,11 @@ class RNTCodeScanner(reactContext: ThemedReactContext) : CodeScanner(reactContex
         Choreographer.getInstance().postFrameCallback(frameCallback)
     }
 
-    fun destroy() {
+    override fun destroy() {
         if (isDestroyed) {
             return
         }
-        stop()
+        super.destroy()
         (context as ThemedReactContext).removeLifecycleEventListener(this)
         Choreographer.getInstance().removeFrameCallback(frameCallback)
         isDestroyed = true

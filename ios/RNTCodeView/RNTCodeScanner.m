@@ -25,8 +25,4 @@
                          });
 }
 
-- (void)destroy {
-    self.scanner.isPreviewing = false;
-}
-
 @end
