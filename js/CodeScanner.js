@@ -64,4 +64,4 @@ class CodeScanner extends PureComponent {
 
 const RNTCodeScanner = requireNativeComponent('RNTCodeScanner', CodeScanner)
 
-export default RNTCodeScanner
+export default CodeScanner
