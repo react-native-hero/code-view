@@ -3,7 +3,6 @@ package com.github.reactnativehero.codeview
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableArray
-import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -57,9 +56,14 @@ class RNTCodeScannerManager(private val reactAppContext: ReactApplicationContext
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any> {
-        return MapBuilder.builder<String, Any>()
-                .put("onScanSuccess", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onScanSuccess")))
-                .build()
+        val baseEventTypeConstants = super.getExportedCustomBubblingEventTypeConstants()
+        val eventTypeConstants = baseEventTypeConstants ?: mutableMapOf()
+        eventTypeConstants.putAll(
+            mapOf(
+                "onScanSuccess" to mapOf("phasedRegistrationNames" to mapOf("bubbled" to "onScanSuccess")),
+            )
+        )
+        return eventTypeConstants
     }
 
     override fun onDropViewInstance(view: RNTCodeScanner) {
