@@ -16,6 +16,10 @@ RCT_CUSTOM_VIEW_PROPERTY(title, NSString, RNTCodeScanner) {
     view.scanner.guideTitle = [RCTConvert NSString:json];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(showUI, BOOL, RNTCodeScanner) {
+    view.scanner.showUI = [RCTConvert BOOL:json];
+}
+
 RCT_EXPORT_VIEW_PROPERTY(onScanSuccess, RCTBubblingEventBlock);
 
 RCT_EXPORT_METHOD(destroy:(nonnull NSNumber *)reactTag) {

@@ -22,6 +22,7 @@ class CodeScanner extends PureComponent {
 
   static propTypes = {
     title: PropTypes.string.isRequired,
+    showUI: PropTypes.bool,
     style: PropTypes.any,
     onScanSuccess: PropTypes.func,
   }

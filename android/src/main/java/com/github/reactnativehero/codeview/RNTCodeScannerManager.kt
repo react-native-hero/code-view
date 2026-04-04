@@ -43,6 +43,11 @@ class RNTCodeScannerManager(private val reactAppContext: ReactApplicationContext
         view.guideTitle = title
     }
 
+    @ReactProp(name = "showUI")
+    fun setTitle(view: RNTCodeScanner, showUI: Boolean) {
+        view.showUI = showUI
+    }
+
     override fun getCommandsMap(): MutableMap<String, Int> {
         val commands = HashMap<String, Int>()
         commands["destroy"] = COMMAND_DESTROY

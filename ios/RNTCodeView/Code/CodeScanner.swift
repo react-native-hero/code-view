@@ -1,4 +1,3 @@
-
 import UIKit
 import AVFoundation
 
@@ -11,6 +10,12 @@ public class CodeScanner: UIView {
         }
     }
     
+    @objc public var showUI: Bool = false {
+        didSet {
+            updateUIVisibility()
+        }
+    }
+
     private var supportedCodeTypes: [AVMetadataObject.ObjectType] = [ .qr, .code39, .code93, .code128, .code39Mod43, .ean8, .ean13, .upce ]
     
     private var configuration: CodeScannerConfiguration!
@@ -40,16 +45,11 @@ public class CodeScanner: UIView {
     
     private var isPreviewing = false {
         didSet {
+            // 统一走UI更新方法
+            updateUIVisibility()
             if isPreviewing {
-                guideLabel.isHidden = false
-                torchButton.isHidden = false
-                laserView.isHidden = false
                 startLaser()
-            }
-            else {
-                guideLabel.isHidden = true
-                torchButton.isHidden = true
-                laserView.isHidden = true
+            } else {
                 stopLaser()
             }
         }
@@ -299,10 +299,10 @@ public class CodeScanner: UIView {
         stopLaser()
 
     }
-
+    
     private func startLaser() {
-
-        guard let box = viewFinder.box, !laserView.isHidden else {
+        // 只有UI显示时才执行动画
+        guard showUI, let box = viewFinder.box, !laserView.isHidden else {
             return
         }
         
@@ -331,7 +331,22 @@ public class CodeScanner: UIView {
         super.layoutSubviews()
         updateView()
     }
-    
+
+    private func updateUIVisibility() {
+        let isShowing = isPreviewing && showUI
+        
+        laserView.isHidden = !isShowing
+        viewFinder.isHidden = !isShowing
+        guideLabel.isHidden = !isShowing
+        torchButton.isHidden = !isShowing
+        
+        if !isShowing {
+            stopLaser()
+        }
+        else if isPreviewing {
+            startLaser()
+        }
+    }
 }
 
 extension CodeScanner: AVCaptureMetadataOutputObjectsDelegate {
