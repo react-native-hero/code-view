@@ -27,6 +27,10 @@ class RNTCodeScannerManager(private val reactAppContext: ReactApplicationContext
 
         scanner.callback = object : CodeScannerCallback {
 
+            override fun onReady() {
+                val event = Arguments.createMap()
+                reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(scanner.id, "onReady", event)
+            }
             override fun onScanSuccess(text: String) {
                 val event = Arguments.createMap()
                 event.putString("text", text)
@@ -44,8 +48,13 @@ class RNTCodeScannerManager(private val reactAppContext: ReactApplicationContext
     }
 
     @ReactProp(name = "showUI")
-    fun setTitle(view: RNTCodeScanner, showUI: Boolean) {
+    fun setShowUI(view: RNTCodeScanner, showUI: Boolean) {
         view.showUI = showUI
+    }
+
+    @ReactProp(name = "isTorchOn")
+    fun setIsTorchOn(view: RNTCodeScanner, isTorchOn: Boolean) {
+        view.isTorchOn = isTorchOn
     }
 
     override fun getCommandsMap(): MutableMap<String, Int> {
@@ -65,6 +74,7 @@ class RNTCodeScannerManager(private val reactAppContext: ReactApplicationContext
         val eventTypeConstants = baseEventTypeConstants ?: mutableMapOf()
         eventTypeConstants.putAll(
             mapOf(
+                "onReady" to mapOf("phasedRegistrationNames" to mapOf("bubbled" to "onReady")),
                 "onScanSuccess" to mapOf("phasedRegistrationNames" to mapOf("bubbled" to "onScanSuccess")),
             )
         )

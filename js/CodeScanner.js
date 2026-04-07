@@ -23,7 +23,9 @@ class CodeScanner extends PureComponent {
   static propTypes = {
     title: PropTypes.string.isRequired,
     showUI: PropTypes.bool,
+    isTorchOn: PropTypes.bool,
     style: PropTypes.any,
+    onReady: PropTypes.func,
     onScanSuccess: PropTypes.func,
   }
 
@@ -44,8 +46,16 @@ class CodeScanner extends PureComponent {
     return ReactNative.findNodeHandle(this.scannerRef.current);
   }
 
+  handleReady = () => {
+    const { onReady } = this.props
+    if (onReady) {
+      onReady()
+    }
+  }
+  handleReady
+
   handleScanSuccess = event => {
-    let { onScanSuccess } = this.props
+    const { onScanSuccess } = this.props
     if (onScanSuccess) {
       onScanSuccess(event.nativeEvent)
     }
@@ -56,6 +66,7 @@ class CodeScanner extends PureComponent {
       <RNTCodeScanner
         ref={this.scannerRef}
         {...this.props}
+        onReady={this.handleReady}
         onScanSuccess={this.handleScanSuccess}
       />
     )

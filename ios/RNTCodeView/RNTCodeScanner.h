@@ -7,6 +7,7 @@
 
 @property (nonatomic, weak) CodeScanner *scanner;
 
+@property (nonatomic, copy) RCTBubblingEventBlock onReady;
 @property (nonatomic, copy) RCTBubblingEventBlock onScanSuccess;
 
 @end

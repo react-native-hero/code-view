@@ -15,20 +15,8 @@ public class CodeScanner: UIView {
             updateUIVisibility()
         }
     }
-
-    private var supportedCodeTypes: [AVMetadataObject.ObjectType] = [ .qr, .code39, .code93, .code128, .code39Mod43, .ean8, .ean13, .upce ]
     
-    private var configuration: CodeScannerConfiguration!
-    
-    private var delegate: CodeScannerDelegate!
-
-    private var captureSession: AVCaptureSession!
-    
-    private var captureDevice: AVCaptureDevice!
-    
-    private var capturePreviewLayer: AVCaptureVideoPreviewLayer?
-
-    private var isTorchOn = false {
+    @objc public var isTorchOn = false {
         didSet {
             if isTorchOn {
                 if setTorchMode(.on) {
@@ -42,15 +30,27 @@ public class CodeScanner: UIView {
             }
         }
     }
+
+    private var supportedCodeTypes: [AVMetadataObject.ObjectType] = [ .qr, .code39, .code93, .code128, .code39Mod43, .ean8, .ean13, .upce ]
+    
+    private var configuration: CodeScannerConfiguration!
+    
+    private var delegate: CodeScannerDelegate!
+
+    private var captureSession: AVCaptureSession!
+    
+    private var captureDevice: AVCaptureDevice!
+    
+    private var capturePreviewLayer: AVCaptureVideoPreviewLayer?
+    
+    private var isReady = false
     
     private var isPreviewing = false {
         didSet {
-            // 统一走UI更新方法
             updateUIVisibility()
-            if isPreviewing {
-                startLaser()
-            } else {
-                stopLaser()
+            if isPreviewing && !isReady {
+                isReady = true
+                delegate.codeScannerDidReady(self)
             }
         }
     }
@@ -340,11 +340,11 @@ public class CodeScanner: UIView {
         guideLabel.isHidden = !isShowing
         torchButton.isHidden = !isShowing
         
-        if !isShowing {
-            stopLaser()
-        }
-        else if isPreviewing {
+        if isShowing {
             startLaser()
+        }
+        else {
+            stopLaser()
         }
     }
 }

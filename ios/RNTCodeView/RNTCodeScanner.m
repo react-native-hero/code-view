@@ -19,6 +19,13 @@
     return self;
 }
 
+- (void)codeScannerDidReady:(CodeScanner *)codeScanner {
+    // 加一个延时，回到主线程后 self.onReady 才会有值
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.onReady(@{});
+    });
+}
+
 - (void)codeScannerDidScanSuccess:(CodeScanner *)codeScanner text:(NSString *)text {
     self.onScanSuccess(@{
                          @"text": text

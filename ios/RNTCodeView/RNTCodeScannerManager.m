@@ -20,6 +20,11 @@ RCT_CUSTOM_VIEW_PROPERTY(showUI, BOOL, RNTCodeScanner) {
     view.scanner.showUI = [RCTConvert BOOL:json];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(isTorchOn, BOOL, RNTCodeScanner) {
+    view.scanner.isTorchOn = [RCTConvert BOOL:json];
+}
+
+RCT_EXPORT_VIEW_PROPERTY(onReady, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onScanSuccess, RCTBubblingEventBlock);
 
 RCT_EXPORT_METHOD(destroy:(nonnull NSNumber *)reactTag) {
