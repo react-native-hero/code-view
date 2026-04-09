@@ -5,6 +5,9 @@ public class CodeScanner: UIView {
 
     @objc public var guideTitle = "" {
         didSet {
+            guard oldValue != guideTitle else {
+                return
+            }
             guideLabel.text = guideTitle
             guideLabel.sizeToFit()
         }
@@ -12,12 +15,18 @@ public class CodeScanner: UIView {
     
     @objc public var showUI: Bool = false {
         didSet {
+            guard oldValue != showUI else {
+                return
+            }
             updateUIVisibility()
         }
     }
     
     @objc public var isTorchOn = false {
         didSet {
+            guard oldValue != isTorchOn else {
+                return
+            }
             if isTorchOn {
                 if setTorchMode(.on) {
                     torchButton.setImage(configuration.torchOffImage, for: .normal)
@@ -47,6 +56,9 @@ public class CodeScanner: UIView {
     
     private var isPreviewing = false {
         didSet {
+            guard oldValue != isPreviewing else {
+                return
+            }
             updateUIVisibility()
             if isPreviewing && !isReady {
                 isReady = true
